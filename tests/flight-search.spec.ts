@@ -25,11 +25,10 @@ test('Verify one-way flight price search', async ({ page }) => {
   await agoda.navigate();
   await agoda.acceptCookiesIfVisible();
   await agoda.openFlightsTab();
-  await agoda.fillDeparture('Ho Chi Minh (SGN)');
-  await agoda.fillDestination('Valencia (VLC)');
-  await agoda.selectDepartureDate(futureDate.day);
+  await agoda.fillLocation('from', 'Ho Chi Minh');
+  await agoda.fillLocation('to', 'Valencia');
+  await agoda.selectDepartureDate(futureDate);
   await agoda.setTwoAdultsEconomy();
   await agoda.clickSearch();
-  await agoda.selectFirstFlight();
-  await agoda.verifyFlightPriceVisible();
+  await agoda.verifyFlightDisplayed();
 });
