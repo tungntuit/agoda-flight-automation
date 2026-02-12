@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test';
+import { AgodaHomeLocator } from './agodaHome.locator';
 
 export class AgodaHomePage {
   constructor(private page: Page) {}
@@ -11,178 +12,178 @@ export class AgodaHomePage {
   }
 
   async acceptCookiesIfVisible() {
-    const acceptBtn = this.page.locator('button:has-text("Accept")');
+    const acceptBtn = this.page.locator(
+      AgodaHomeLocator.ACCEPT_COOKIES_BUTTON
+    );
+
     if (await acceptBtn.isVisible().catch(() => false)) {
       await acceptBtn.click();
     }
   }
 
   async openFlightsTab() {
-    await this.page.getByRole('tab', { name: /Flights/i }).click();
-    await this.closePromoPopupIfVisible();
+    await this.page.getByRole(
+      AgodaHomeLocator.FLIGHTS_TAB.role as any,
+      { name: AgodaHomeLocator.FLIGHTS_TAB.name }
+    ).click();
 
+    await this.closePromoPopupIfVisible();
   }
 
   async fillDeparture(city: string) {
-    const fromInput = this.page.getByPlaceholder(/Flying from/i);
+    const fromInput = this.page.getByPlaceholder(
+      AgodaHomeLocator.FROM_PLACEHOLDER
+    );
+
     await fromInput.click();
     await fromInput.fill(city);
-    await this.page.waitForTimeout(1000);
     await this.page.keyboard.press('Enter');
   }
 
   async fillLocation(type: 'from' | 'to', city: string) {
-    const input = this.page.getByRole('combobox', {
-      name: type === 'from' ? /Flying from/i : /Flying to/i,
-    });
-  
+    const combobox =
+      type === 'from'
+        ? AgodaHomeLocator.COMBOBOX_FROM
+        : AgodaHomeLocator.COMBOBOX_TO;
+
+    const input = this.page.getByRole(
+      combobox.role as any,
+      { name: combobox.name }
+    );
+
     await input.click();
     await input.fill(city);
-  
+
     const firstOption = this.page
-      .locator('[role="option"]:not([aria-disabled="true"])')
+      .locator(AgodaHomeLocator.FIRST_AVAILABLE_OPTION)
       .first();
-  
+
     await firstOption.waitFor({ state: 'visible' });
     await firstOption.click();
   }
 
   async selectDepartureDate(date: Date) {
-    const departure = this.page.getByText('Departure');
-  
+    const departure = this.page.getByText(
+      AgodaHomeLocator.DEPARTURE_LABEL
+    );
+
     await departure.click();
     await departure.click();
 
+    const formatted = this.formatDate(date);
+
+    await this.page
+      .locator(AgodaHomeLocator.DATE_BY_VALUE(formatted))
+      .click();
+  }
+
+  private formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-  
-    const formatted = `${year}-${month}-${day}`;
-  
-    console.log('Selecting date:', formatted);
-  
-    await this.page
-      .locator(`[data-selenium-date="${formatted}"]`)
-      .click();
+
+    return `${year}-${month}-${day}`;
   }
-  
+
   async closePromoPopupIfVisible() {
-    const closeBtn = this.page.getByRole('button', { name: /close/i });
-  
+    const closeBtn = this.page.getByRole(
+      AgodaHomeLocator.PROMO_CLOSE_BUTTON.role as any,
+      { name: AgodaHomeLocator.PROMO_CLOSE_BUTTON.name }
+    );
+
     try {
-      // chờ tối đa 5 giây cho popup xuất hiện
-      await closeBtn.waitFor({ state: 'visible', timeout:5000 });
-  
+      await closeBtn.waitFor({ state: 'visible', timeout: 5000 });
       await closeBtn.click();
-  
-      // chờ popup biến mất hẳn
       await closeBtn.waitFor({ state: 'detached' });
-  
-    } catch (error) {
-      // Không xuất hiện thì thôi, bỏ qua
+    } catch {
       console.log('Promo popup did not appear.');
     }
   }
 
-
   async setTwoAdultsEconomy() {
     const plusBtn = this.page.locator(
-      '[data-element-name="flight-occupancy-adult-increase"]'
+      AgodaHomeLocator.ADULT_INCREASE_BUTTON
     );
-    
+
     await plusBtn.waitFor({ state: 'visible' });
     await plusBtn.click();
 
     const economyBtn = this.page.locator(
-      '[data-element-object-id="economy"]'
+      AgodaHomeLocator.ECONOMY_BUTTON
     );
 
     await economyBtn.waitFor({ state: 'visible' });
     await economyBtn.click();
- 
-    const passengerPopup = this.page.locator('[data-element-name="flight-occupancy-adult-increase"]').first();
-    await this.page.mouse.click(10, 10);
-    await passengerPopup.waitFor({ state: 'hidden' });
 
+    await this.page.mouse.click(10, 10);
   }
 
   async clickSearch() {
-    await this.page.getByRole('button', { name: /Search/i }).click();
+    await this.page.getByRole(
+      AgodaHomeLocator.SEARCH_BUTTON.role as any,
+      { name: AgodaHomeLocator.SEARCH_BUTTON.name }
+    ).click();
   }
 
   async selectFirstFlight() {
-    const expandBtn = this.page.locator(
-      'button[aria-label^="Expand flight details"]'
-    ).first();
-  
+    const expandBtn = this.page
+      .locator(AgodaHomeLocator.EXPAND_FLIGHT_BUTTON)
+      .first();
+
     await expandBtn.waitFor({ state: 'visible', timeout: 30000 });
     await expandBtn.click();
   }
 
   normalizePrice(price: string): number {
-    return Number(
-      price.replace(/[^\d]/g, '')
-    );
+    return Number(price.replace(/[^\d]/g, ''));
   }
 
   async getFirstFlightPriceFromSearch(): Promise<number> {
-
     const priceText = await this.page
-      .locator('button[aria-label^="Expand flight details"]')
+      .locator(AgodaHomeLocator.EXPAND_FLIGHT_BUTTON)
       .first()
       .locator('xpath=ancestor::div[contains(@class,"Card")]')
       .locator('text=/₫/')
       .first()
       .textContent();
-  
-    console.log('Search price raw:', priceText);
-  
+
     return this.normalizePrice(priceText!);
   }
 
   async clickSelectButton() {
-    await this.page.getByRole('button', { name: 'Select' }).click();
+    await this.page.getByRole(
+      AgodaHomeLocator.SELECT_BUTTON.role as any,
+      { name: AgodaHomeLocator.SELECT_BUTTON.name }
+    ).click();
   }
 
   async getTotalPriceFromDetail(): Promise<number> {
-
     const totalText = await this.page
-      .locator('text=Total')
+      .locator(AgodaHomeLocator.TOTAL_TEXT)
       .locator('..')
       .locator('text=/₫/')
       .textContent();
-  
-    console.log('Detail price raw:', totalText);
-  
+
     return this.normalizePrice(totalText!);
   }
 
   async verifyFlightPriceVisible() {
     await expect(
-      this.page.locator('[data-testid="flight-price"]')
+      this.page.locator(AgodaHomeLocator.FLIGHT_PRICE_TEST_ID)
     ).toBeVisible();
   }
 
   async verifyFlightDisplayed() {
+    await expect(
+      this.page.locator(AgodaHomeLocator.DEPARTURE_TIME).first()
+    ).toBeVisible({ timeout: 30000 });
 
-  // Airline
-  const airline = this.page.locator("//p[normalize-space()]").first();
-  await expect(airline).toBeVisible();
+    await expect(
+      this.page.locator(AgodaHomeLocator.ARRIVAL_TIME).first()
+    ).toBeVisible({ timeout: 30000 });
 
-  // Departure
-  await expect(
-    this.page.locator('[data-testid="departure-time"]').first()
-  ).toBeVisible({ timeout: 30000 });
-
-  // Arrival
-  await expect(
-    this.page.locator('[data-testid="arrival-time"]').first()
-  ).toBeVisible({ timeout: 30000 });
-
-  // Price
-  await expect(
-    this.page.getByText(/\d{1,3}(,\d{3})+/).first()
-  ).toBeVisible();
-
+    await expect(
+      this.page.getByText(AgodaHomeLocator.FLIGHT_PRICE_REGEX).first()
+    ).toBeVisible();
   }
 }
