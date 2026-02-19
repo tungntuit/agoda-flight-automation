@@ -1,13 +1,13 @@
-import { test } from '@playwright/test';
-import { AgodaHomePage } from '../pages/agodaHome.page';
-import { getFutureDate } from '../utils/dateHelper';
-import flightData from '../test-data/flightData.json';
+import { expect } from '@playwright/test';
+import { test } from '../hooks/hooks';
+import { AgodaHomePage } from '../../pages/agodaHome.page';
+import { getFutureDate } from '../../utils/dateHelper';
+import flightData from '../../test-data/flightData.json';
 
 test.describe('Flight Search - Data Driven', () => {
 
-
   test.describe.configure({
-    mode: 'parallel',
+    mode: 'serial',
     retries: 2,
   });
 
