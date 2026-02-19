@@ -3,3 +3,4 @@ export function getFutureDate(daysToAdd: number): Date {
   date.setDate(date.getDate() + daysToAdd);
   return date;
 }
+
