@@ -2,7 +2,10 @@
   "name": "agoda-flight-automation",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "pretest": "ts-node utils/excelToJson.ts",
+    "test": "playwright test"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -10,5 +13,8 @@
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.2.3"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
   }
 }
