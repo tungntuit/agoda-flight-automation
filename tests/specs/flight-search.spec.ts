@@ -2,7 +2,7 @@ import { expect } from '@playwright/test';
 import { test } from '../hooks/hooks';
 import { AgodaHomePage } from '../../pages/agodaHome.page';
 import { getFutureDate } from '../../utils/dateHelper';
-import { FlightSearchData } from '../../utils/flight.types';
+import { FlightSearchData } from '../../utils/flightTypes';
 import flightDataJson from '../../test-data/flightData.json';
 const flightData = flightDataJson as FlightSearchData[];
 

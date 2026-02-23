@@ -1,5 +1,5 @@
 import ExcelJS from 'exceljs';
-import { FlightSearchData } from './flight.types';
+import { FlightSearchData } from './flightTypes';
 
 export async function readFlightData() {
   const workbook = new ExcelJS.Workbook();
