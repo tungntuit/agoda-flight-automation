@@ -100,21 +100,42 @@ export class AgodaHomePage {
     }
   }
 
-  async setTwoAdultsEconomy() {
+  async setAdults(count: number) {
     const plusBtn = this.page.locator(
       AgodaHomeLocator.ADULT_INCREASE_BUTTON
     );
-
+  
     await plusBtn.waitFor({ state: 'visible' });
-    await plusBtn.click();
+  
+    // Agoda default = 1 adult
+    for (let i = 1; i < count; i++) {
+      await plusBtn.click();
+    }
+  }
 
-    const economyBtn = this.page.locator(
-      AgodaHomeLocator.ECONOMY_BUTTON
-    );
-
-    await economyBtn.waitFor({ state: 'visible' });
-    await economyBtn.click();
-
+  async setCabinClass(cabin: 'Economy' | 'Premium Economy' | 'Business' | 'First') {
+    let cabinLocator;
+  
+    switch (cabin) {
+      case 'Economy':
+        cabinLocator = AgodaHomeLocator.ECONOMY_BUTTON;
+        break;
+      case 'Premium Economy':
+        cabinLocator = AgodaHomeLocator.PREMIUM_ECONOMY_BUTTON;
+        break;
+      case 'Business':
+        cabinLocator = AgodaHomeLocator.BUSINESS_BUTTON;
+        break;
+      case 'First':
+        cabinLocator = AgodaHomeLocator.FIRST_BUTTON;
+        break;
+    }
+  
+    const cabinBtn = this.page.locator(cabinLocator!);
+  
+    await cabinBtn.waitFor({ state: 'visible' });
+    await cabinBtn.click();
+  
     await this.page.mouse.click(10, 10);
   }
 

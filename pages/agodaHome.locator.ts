@@ -25,6 +25,15 @@ export class AgodaHomeLocator {
   
     static ECONOMY_BUTTON =
       '[data-element-object-id="economy"]';
+
+    static PREMIUM_ECONOMY_BUTTON =
+      '[data-element-object-id="Premium economy"]';
+
+    static BUSINESS_BUTTON =
+      '[data-element-object-id="Business"]';
+
+    static FIRST_BUTTON =
+      '[data-element-object-id="Business"]';
   
     // ===== Flight Result =====
     static EXPAND_FLIGHT_BUTTON =

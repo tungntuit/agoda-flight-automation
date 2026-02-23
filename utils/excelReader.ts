@@ -1,11 +1,12 @@
 import ExcelJS from 'exceljs';
+import { FlightSearchData } from './flight.types';
 
 export async function readFlightData() {
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile('./test-data/flightData.xlsx');
   const sheet = workbook.getWorksheet('data');
-  const data: any[] = [];
-
+  const data: FlightSearchData[] = [];
+  
   if (!sheet) {
     throw new Error('Sheet "data" not found');
   }
@@ -19,10 +20,15 @@ export async function readFlightData() {
 
     if (rowNumber === 1) return; 
 
-    const rowData: any = {};
+    const rowData = {} as FlightSearchData;
     row.eachCell((cell, colNumber) => {
       const key = headers[colNumber];
-      rowData[key] = cell.value;
+      const value = cell.value;
+      if (key === 'passenger') {
+        rowData[key] = Number(value);
+      } else {
+        rowData[key] = value;
+      }
     });
 
     data.push(rowData);

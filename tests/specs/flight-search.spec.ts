@@ -2,7 +2,9 @@ import { expect } from '@playwright/test';
 import { test } from '../hooks/hooks';
 import { AgodaHomePage } from '../../pages/agodaHome.page';
 import { getFutureDate } from '../../utils/dateHelper';
-import flightData from '../../test-data/flightData.json';
+import { FlightSearchData } from '../../utils/flight.types';
+import flightDataJson from '../../test-data/flightData.json';
+const flightData = flightDataJson as FlightSearchData[];
 
 test.describe('Flight Search - Data Driven', () => {
 
@@ -26,7 +28,8 @@ test.describe('Flight Search - Data Driven', () => {
       await agoda.fillLocation('to', data.locationTo);
 
       await agoda.selectDepartureDate(futureDate);
-      await agoda.setTwoAdultsEconomy();
+      await agoda.setAdults(data.passenger);
+      await agoda.setCabinClass(data.class);
       await agoda.clickSearch();
 
       await agoda.verifyFlightDisplayed();

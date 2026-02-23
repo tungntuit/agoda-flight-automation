@@ -2,11 +2,15 @@
   {
     "futureDay": "2",
     "locationFrom": "Ho Chi Minh",
-    "locationTo": "Valencia"
+    "locationTo": "Valencia",
+    "passenger": 2,
+    "class": "Economy"
   },
   {
     "futureDay": "3",
     "locationFrom": "Ha Noi",
-    "locationTo": "Barcelona"
+    "locationTo": "Barcelona",
+    "passenger": 2,
+    "class": "Economy"
   }
 ]
