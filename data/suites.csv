@@ -1,3 +1,3 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","12346","Flight Ho Chi Minh → Valencia","chromium","2026-02-23","passed","2026-02-23","Flight Search - Data Driven","specs/flight-search.spec.ts","",""
-"","12199","Flight Ha Noi → Barcelona","chromium","2026-02-23","passed","2026-02-23","Flight Search - Data Driven","specs/flight-search.spec.ts","",""
+"","11290","Flight Ho Chi Minh → Valencia","chromium","2026-02-24","passed","2026-02-24","Flight Search - Data Driven","specs/flight-search.spec.ts","",""
+"","12373","Flight Ha Noi → Barcelona","chromium","2026-02-24","passed","2026-02-24","Flight Search - Data Driven","specs/flight-search.spec.ts","",""
