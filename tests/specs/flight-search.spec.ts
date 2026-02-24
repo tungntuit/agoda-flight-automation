@@ -36,5 +36,4 @@ test.describe('Flight Search - Data Driven', () => {
     });
 
   }
-
 });
